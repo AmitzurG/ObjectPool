@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ObjectPool</string>
+    <string name="useObjectPool">Use object pool</string>
+    <string name="useFewObjectPool">Use few object pool</string>
+</resources>
