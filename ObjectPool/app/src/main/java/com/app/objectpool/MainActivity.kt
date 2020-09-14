@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -27,8 +28,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun useObjectFromPool() {
         val reusedObj = ObjectPool.instant.pull()
-        useObjectTextView.text = "use ${reusedObj.name}"
-        reusedObj.execute()
+        useObjectTextView.text = "use ${reusedObj.name} object"
+        useObject(reusedObj)
     }
 
     @SuppressLint("SetTextI18n")
@@ -36,7 +37,13 @@ class MainActivity : AppCompatActivity() {
         repeat(objectsNum) {
             val reusedObj = ObjectPool.instant.pull()
             withContext(Dispatchers.Main) { useObjectTextView.text = "use ${reusedObj.name}" }
-            reusedObj.execute { Log.i(ObjectPool.LOG_TAG, "use the $it object") }
+            useObject(reusedObj)
         }
+    }
+
+    private fun useObject(obj: ObjectPool.ReusedObject) = lifecycleScope.launch(Dispatchers.Default) {
+        Log.i(ObjectPool.LOG_TAG, "use the ${obj.name} object")
+        // delay to demonstrate that the object in used
+        delay(2000)
     }
 }
