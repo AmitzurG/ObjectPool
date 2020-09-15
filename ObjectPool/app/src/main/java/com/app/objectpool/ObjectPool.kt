@@ -18,6 +18,8 @@ class ObjectPool private constructor() {
 
     // take object from the object pool
     fun pull() : ReusedObject {
+        System.gc()
+        System.runFinalization()
         if (freeObjects.isEmpty()) {
             Log.i(LOG_TAG, "there aren't unused objects, create another five objects")
             freeObjects.addAll(createObjects(5))
@@ -48,6 +50,4 @@ class ObjectPool private constructor() {
         }
     }
 }
-
-
 
